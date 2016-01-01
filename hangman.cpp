@@ -1,8 +1,11 @@
 #include<iostream>
 #include<string>
 #include<vector>
-
+#include<string.h>
 using namespace std;
+
+
+
 
 class hangman{
 	string word;
@@ -10,15 +13,18 @@ class hangman{
 	int score;
 	int attemptsLeft;
 	vector<int>charPos;
+	bool game_status = true;
+	
 	public:
-	hangman(string gWord) : word{gWord}, score{100}, attemptsLeft{3} {dashedWord = word;
-									  dashedWord.replace(0,word.size(),word.size(),'-');
-									}
+	hangman(string gWord) : word{gWord}, score{100}, attemptsLeft{3} {}
+	
+	
 	//Set the word to start playing. Given 100 points(maximum possible score) and three attempts. 
 	//A Successful guess isn't considered an attempt.
 	void show(){
 		cout<<"Maximum Possible score: "<<score<<endl;
 		cout<<"Attempts Left: "<<attemptsLeft<<endl;
+		//cout<<word;
 	}
 	void show(bool game){
 		if(game == true){
@@ -51,15 +57,72 @@ class hangman{
 		i++;
 		}
 	}
+	void display(char a){
+		//cout<<dashedWord<<endl;
+		findCharNumber(a);
+		while(charPos.size()){
+		dashedWord.replace(charPos.back(),1,1,word[charPos.back()]);
+		charPos.pop_back();
+		}
+		
+		cout<<dashedWord<<endl;
+
+	}
 	void display(){
+		cout<<dashedWord<<endl;
+	}
+	void strip_space(){
+		size_t found = word.find(' ',0);
+		while(found != string::npos){
+			word.erase(found,1);
+			found = word.find(' ',found+1);
+		}
+	}
+	void set_dashedWord(){
+		strip_space();
+		dashedWord = word;
+		dashedWord.replace(0,word.size(),word.size(),'-');
+	}
+	bool check_letter(char letter){
+		if(word.find(letter,0) == string::npos)return false;
+		return true;
 	}		
+
+	void game_check(){
+		if(!word.compare(dashedWord)){
+		game_status = false;
+		show(true);
+		}
+		else if(attemptsLeft == 0){
+		game_status = false;
+		show(false);
+		}
+	}
+
+		
+	void game_interface(){
+	set_dashedWord();
+	char letter;
+	display();
+		while(game_status){
+			cout<<"Enter the letter: ";
+			cin>>letter;
+			display(letter);
+			bool guess = check_letter(letter);
+			if(!guess){
+			score_attempt_downgrade();
+		
+			}
+			game_check();
+		}
+	}			
 };
+
+
+
 
 int main(){
 	hangman gameOne("new year!");
-	gameOne.show();
-	gameOne.score_attempt_downgrade();
-	gameOne.show();
-	gameOne.show(true);
+	gameOne.game_interface();
 	return 0;	
 }  
