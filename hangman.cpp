@@ -11,7 +11,9 @@ class hangman{
 	int attemptsLeft;
 	vector<int>charPos;
 	public:
-	hangman(string gWord) : word{gWord}, score{100}, attemptsLeft{3} {}
+	hangman(string gWord) : word{gWord}, score{100}, attemptsLeft{3} {dashedWord = word;
+									  dashedWord.replace(0,word.size(),word.size(),'-');
+									}
 	//Set the word to start playing. Given 100 points(maximum possible score) and three attempts. 
 	//A Successful guess isn't considered an attempt.
 	void show(){
@@ -42,7 +44,7 @@ class hangman{
 	}
 	void findCharNumber(char letter){
 		int i = 0;
-		for(iterator it = str.begin();it != str.end(); it++){
+		for(string::iterator it = word.begin();it != word.end(); it++){
 			if(letter == *it){
 				charPos.push_back(i);
 			}
@@ -50,8 +52,7 @@ class hangman{
 		}
 	}
 	void display(){
-					
-		
+	}		
 };
 
 int main(){
