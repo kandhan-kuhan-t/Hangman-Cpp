@@ -2,6 +2,7 @@
 #include<string>
 #include<vector>
 #include<string.h>
+#include<cstdlib>
 using namespace std;
 
 
@@ -14,11 +15,11 @@ class hangman{
 	int attemptsLeft;
 	vector<int>charPos;
 	bool game_status = true;
-	
+
 	public:
 	hangman(string gWord) : word{gWord}, score{100}, attemptsLeft{3} {}
-	
-	
+
+
 	//Set the word to start playing. Given 100 points(maximum possible score) and three attempts. 
 	//A Successful guess isn't considered an attempt.
 	void show(){
@@ -27,11 +28,16 @@ class hangman{
 		//cout<<word;
 	}
 	void show(bool game){
+		system("clear");
 		if(game == true){
+			cout<<word<<endl<<endl;
 			cout<<"You have Won and you score is: "<<score<<endl;;
 		}
 		else{
-			cout<<"You have lost :| "<<endl;
+			
+			cout<<"You have lost :|"<<endl;
+			cout<<"The correct word is: "<<word<<endl;
+			
 		}
 	}
 	void score_attempt_downgrade(){
@@ -54,22 +60,24 @@ class hangman{
 			if(letter == *it){
 				charPos.push_back(i);
 			}
-		i++;
+			i++;
 		}
 	}
 	void display(char a){
 		//cout<<dashedWord<<endl;
 		findCharNumber(a);
 		while(charPos.size()){
-		dashedWord.replace(charPos.back(),1,1,word[charPos.back()]);
-		charPos.pop_back();
+			dashedWord.replace(charPos.back(),1,1,word[charPos.back()]);
+			charPos.pop_back();
 		}
-		
+		system("clear");
 		cout<<dashedWord<<endl;
+		show();
 
 	}
 	void display(){
 		cout<<dashedWord<<endl;
+		show();
 	}
 	void strip_space(){
 		size_t found = word.find(' ',0);
@@ -90,29 +98,29 @@ class hangman{
 
 	void game_check(){
 		if(!word.compare(dashedWord)){
-		game_status = false;
-		show(true);
+			game_status = false;
+			show(true);
 		}
 		else if(attemptsLeft == 0){
-		game_status = false;
-		show(false);
+			game_status = false;
+			show(false);
 		}
 	}
 
-		
+
 	void game_interface(){
-	set_dashedWord();
-	char letter;
-	display();
+		system("clear");
+		set_dashedWord();
+		char letter;
+		display();
 		while(game_status){
 			cout<<"Enter the letter: ";
 			cin>>letter;
-			display(letter);
 			bool guess = check_letter(letter);
 			if(!guess){
-			score_attempt_downgrade();
-		
+				score_attempt_downgrade();
 			}
+			display(letter);
 			game_check();
 		}
 	}			
