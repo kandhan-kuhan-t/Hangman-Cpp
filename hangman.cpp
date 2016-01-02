@@ -18,7 +18,7 @@ class hangman{
 
 	public:
 	hangman(string gWord) : word{gWord}, score{100}, attemptsLeft{3} {}
-
+	hangman(void)	      :  score{100}, attemptsLeft{3} {}
 
 	//Set the word to start playing. Given 100 points(maximum possible score) and three attempts. 
 	//A Successful guess isn't considered an attempt.
@@ -34,10 +34,10 @@ class hangman{
 			cout<<"You have Won and you score is: "<<score<<endl;;
 		}
 		else{
-			
+
 			cout<<"You have lost :|"<<endl;
 			cout<<"The correct word is: "<<word<<endl;
-			
+
 		}
 	}
 	void score_attempt_downgrade(){
@@ -63,21 +63,19 @@ class hangman{
 			i++;
 		}
 	}
-	void display(char a){
+	void display(){
 		//cout<<dashedWord<<endl;
-		findCharNumber(a);
-		while(charPos.size()){
-			dashedWord.replace(charPos.back(),1,1,word[charPos.back()]);
-			charPos.pop_back();
-		}
 		system("clear");
 		cout<<dashedWord<<endl;
 		show();
 
 	}
-	void display(){
-		cout<<dashedWord<<endl;
-		show();
+	void update_dashedWord(char a){
+		findCharNumber(a);
+		while(charPos.size()){
+			dashedWord.replace(charPos.back(),1,1,word[charPos.back()]);
+			charPos.pop_back();
+		}
 	}
 	void strip_space(){
 		size_t found = word.find(' ',0);
@@ -93,6 +91,7 @@ class hangman{
 	}
 	bool check_letter(char letter){
 		if(word.find(letter,0) == string::npos)return false;
+		if(dashedWord.find(letter,0) != string::npos)return false;
 		return true;
 	}		
 
@@ -116,21 +115,32 @@ class hangman{
 		while(game_status){
 			cout<<"Enter the letter: ";
 			cin>>letter;
+			update_dashedWord(letter);
 			bool guess = check_letter(letter);
 			if(!guess){
 				score_attempt_downgrade();
 			}
-			display(letter);
+			display();
 			game_check();
 		}
-	}			
+	}
+	void set_word(){
+		cout<<"Enter the word to be set: "<<endl;
+		getline(cin,word);
+	}
+
+
+
 };
 
 
 
 
 int main(){
-	hangman gameOne("new year!");
-	gameOne.game_interface();
+	//	hangman gameOne("new year!");
+	//	gameOne.game_interface();
+	hangman gameTwo("");
+	gameTwo.set_word();
+	gameTwo.game_interface();
 	return 0;	
 }  
